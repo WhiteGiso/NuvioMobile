@@ -2286,9 +2286,9 @@ Bu özelliği tamamen kendi sorumluluğunuzda kullanırsınız. P2P istediğiniz
     <string name="server_error_save">Sunucu yapılandırması kaydedilemedi.</string>
     <string name="server_error_session_clear">Geçerli oturum güvenli bir şekilde temizlenemedi. Sunucu değiştirilmedi.</string>
     <string name="server_error_restart">Sunucu kaydedildi ancak uygulama otomatik olarak yeniden başlatılamadı. Lütfen manuel olarak yeniden başlatın.</string>
-    <string name="compose_player_chapters">Bölümler</string>
-    <string name="compose_player_panel_chapters">Bölümler (%1$d)</string>
-    <string name="compose_player_chapter_number">Bölüm %1$d</string>
+    <string name="compose_player_chapters">Sahneler</string>
+    <string name="compose_player_panel_chapters">Sahneler (%1$d)</string>
+    <string name="compose_player_chapter_number">Sahne %1$d</string>
     <string name="compose_player_chapter_remaining">%1$s kaldı</string>
     <string name="settings_licenses_attributions_section_ui">ARAYÜZ KÜTÜPHANELERİ</string>
     <string name="settings_licenses_attributions_haze_title">Haze 1.7.2</string>
@@ -2368,8 +2368,8 @@ Bu özelliği tamamen kendi sorumluluğunuzda kullanırsınız. P2P istediğiniz
     <string name="settings_playback_pause_overlay_description">Duraklatıldığında 5 saniye sonra ayrıntılar kaplamasını göster.</string>
     <string name="settings_playback_subtitle_strip_sdh">SDH Altyazılarını Temizle</string>
     <string name="settings_playback_subtitle_strip_sdh_description">Metin altyazılarından ses açıklamalarını ve konuşmacı etiketlerini gizleyin.</string>
-    <string name="settings_playback_exo_chapters">Bölümleri Göster</string>
-    <string name="settings_playback_exo_chapters_description">MKV dosyalarının bölümlerini okuyarak ilerleme çubuğunda işaretler ve oynatıcıda listeler. Oynatma başladığında birkaç küçük ek istek yapar. libmpv bölümleri her zaman gösterir.</string>
+    <string name="settings_playback_exo_chapters">Sahneleri Göster</string>
+    <string name="settings_playback_exo_chapters_description">MKV dosyalarının sahnelerini okuyarak ilerleme çubuğunda işaretler ve oynatıcıda listeler. Oynatma başladığında birkaç küçük ek istek yapar. libmpv sahneleri her zaman gösterir.</string>
     <string name="settings_tmdb_api_key_label">API anahtarı</string>
     <string name="settings_tmdb_api_key_override_description">Kendi TMDB API anahtarınızı kullanın veya varsayılanı kullanmak için boş bırakın.</string>
     <string name="settings_tmdb_personal_api_key">Kişisel API anahtarı</string>
