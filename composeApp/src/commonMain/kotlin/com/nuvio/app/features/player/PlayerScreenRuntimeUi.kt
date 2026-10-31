@@ -173,15 +173,10 @@ internal fun PlayerScreenRuntime.RenderPlayerRuntimeUi() {
             engineFailoverDisarmed = false
             playbackEngineOverride = null
         }
-        
-        val cachedMeta = remember(parentMetaType, parentMetaId) {
-            MetaDetailsRepository.peek(parentMetaType, parentMetaId)
+
+        val resolvedAutoEngineState = remember(sourcePlaybackKey) {
+            mutableStateOf<AndroidPlaybackEngine?>(null)
         }
-        val effectiveMeta = playerMeta
-            ?: metaUiState.meta?.takeIf { it.id == parentMetaId }
-            ?: cachedMeta
-        val resolvedAutoEngineState =
-            remember(sourcePlaybackKey) { mutableStateOf<AndroidPlaybackEngine?>(null) }
         if (!initialLoadCompleted || resolvedAutoEngineState.value == null) {
             resolvedAutoEngineState.value = resolveAutoPlaybackEngine(
                 playbackEngineSetting = playerSettingsUiState.androidPlaybackEngine,
@@ -190,8 +185,8 @@ internal fun PlayerScreenRuntime.RenderPlayerRuntimeUi() {
                 streamName = activeStreamTitle,
                 streamDescription = activeStreamSubtitle,
                 contentTitle = title,
-                genres = effectiveMeta?.genres.orEmpty(),
-                country = effectiveMeta?.country,
+                genres = playerMeta?.genres.orEmpty(),
+                country = playerMeta?.country,
             )
         }
         val resolvedAutoEngine = resolvedAutoEngineState.value
