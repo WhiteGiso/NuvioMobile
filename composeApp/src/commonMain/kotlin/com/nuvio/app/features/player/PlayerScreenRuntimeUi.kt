@@ -168,20 +168,12 @@ internal fun PlayerScreenRuntime.RenderPlayerRuntimeUi() {
         val sourcePlaybackKey = playbackKey.copy(playbackEngine = null)
         val initialPositionRequestKey = currentInitialPositionRequestKey()
 
-        // Failover and manual switches are scoped to one source: a new source re-arms
-        // the failover and clears the previous engine choice. Keyed on the source, not
-        // on the full playbackKey, which includes the engine override — an effect keyed
-        // on it would undo the very switch that changed the key.
         LaunchedEffect(sourcePlaybackKey) {
             engineFailoverTriggered = false
             engineFailoverDisarmed = false
             playbackEngineOverride = null
         }
-
-        // Genres/country come from metadata that can load after first composition, so
-        // the resolution re-runs while the source is still loading; once playback has
-        // loaded the engine is frozen, because a late metadata update must never
-        // restart a playing stream.
+        
         val cachedMeta = remember(parentMetaType, parentMetaId) {
             MetaDetailsRepository.peek(parentMetaType, parentMetaId)
         }
