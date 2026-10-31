@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -183,17 +182,18 @@ internal fun PlayerScreenRuntime.RenderPlayerRuntimeUi() {
         // the resolution re-runs while the source is still loading; once playback has
         // loaded the engine is frozen, because a late metadata update must never
         // restart a playing stream.
+        val cachedMeta = remember(parentMetaType, parentMetaId) {
+            MetaDetailsRepository.peek(parentMetaType, parentMetaId)
+        }
         val effectiveMeta = playerMeta
             ?: metaUiState.meta?.takeIf { it.id == parentMetaId }
-            ?: MetaDetailsRepository.peek(parentMetaType, parentMetaId)
+            ?: cachedMeta
         val resolvedAutoEngineState =
             remember(sourcePlaybackKey) { mutableStateOf<AndroidPlaybackEngine?>(null) }
-        val hasMetadata = effectiveMeta != null && (effectiveMeta.genres.isNotEmpty() || effectiveMeta.country != null)
-        if (!initialLoadCompleted || resolvedAutoEngineState.value == null || (!hasMetadata && playerMeta != null)) {
+        if (!initialLoadCompleted || resolvedAutoEngineState.value == null) {
             resolvedAutoEngineState.value = resolveAutoPlaybackEngine(
                 playbackEngineSetting = playerSettingsUiState.androidPlaybackEngine,
                 videoId = activeVideoId,
-                parentMetaId = parentMetaId,
                 streamFilename = activeTorrentFilename ?: activeStreamFilename,
                 streamName = activeStreamTitle,
                 streamDescription = activeStreamSubtitle,

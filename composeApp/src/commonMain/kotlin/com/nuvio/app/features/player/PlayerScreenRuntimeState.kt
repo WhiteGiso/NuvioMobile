@@ -9,7 +9,6 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.nuvio.app.features.addons.AddonsUiState
 import com.nuvio.app.features.details.MetaDetails
-import com.nuvio.app.features.details.MetaDetailsRepository
 import com.nuvio.app.features.details.MetaDetailsUiState
 import com.nuvio.app.features.details.MetaScreenSettingsUiState
 import com.nuvio.app.features.details.MetaVideo
@@ -194,9 +193,8 @@ internal class PlayerScreenRuntime(
     var submitIntroStartTimeStr by mutableStateOf("00:00")
     var submitIntroEndTimeStr by mutableStateOf("00:00")
     var episodeStreamsPanelState by mutableStateOf(EpisodeStreamsPanelState())
-    private val initialMeta = MetaDetailsRepository.peek(args.parentMetaType, args.parentMetaId)
-    var playerMetaVideos by mutableStateOf<List<MetaVideo>>(initialMeta?.videos.orEmpty())
-    var playerMeta by mutableStateOf<MetaDetails?>(initialMeta)
+    var playerMetaVideos by mutableStateOf<List<MetaVideo>>(emptyList())
+    var playerMeta by mutableStateOf<MetaDetails?>(null)
     var skipIntervals by mutableStateOf<List<SkipInterval>>(emptyList())
     var chapterSkipIntervals: List<SkipInterval> = emptyList()
     var apiSkipIntervals: List<SkipInterval> = emptyList()
