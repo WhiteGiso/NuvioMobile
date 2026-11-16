@@ -1,0 +1,56 @@
+name: Sync sideload source
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: sideload-beta
+
+      - name: Point store.json at the newest official release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          release="${RUNNER_TEMP}/release.json"
+          gh api "repos/NuvioMedia/NuvioMobile/releases?per_page=20" \
+            --jq '[.[] | select(.draft == false) | select([.assets[] | select(.name | endswith(".ipa"))] | length == 1)][0]' \
+            > "${release}"
+
+          tag="$(jq -r '.tag_name' "${release}")"
+          ipa="$(jq -r '.assets[] | select(.name | endswith(".ipa")) | .name' "${release}")"
+          current="$(jq -r '.apps[0].versions[0].downloadURL' store.json | sed -E 's|.*/download/([^/]+)/.*|\1|')"
+          if [[ "${current}" == "${tag}" ]]; then
+            echo "store.json already points at ${tag}."
+            exit 0
+          fi
+
+          echo "Updating store.json from ${current} to ${tag}."
+          gh release download "${tag}" --repo NuvioMedia/NuvioMobile --pattern "${ipa}" --dir ipa
+          jq -rj '.body // ""' "${release}" > notes.md
+          curl -fsSL "https://raw.githubusercontent.com/NuvioMedia/NuvioMobile/cmp-rewrite/scripts/update-store-source.py" \
+            -o "${RUNNER_TEMP}/update-store-source.py"
+
+          python3 "${RUNNER_TEMP}/update-store-source.py" \
+            --source store.json \
+            --ipa "ipa/${ipa}" \
+            --release-notes notes.md \
+            --release-version "${tag%-beta}" \
+            --release-date "$(jq -r '.published_at' "${release}")" \
+            --download-url "$(jq -r --arg name "${ipa}" '.assets[] | select(.name == $name) | .browser_download_url' "${release}")"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add store.json
+          git commit -m "chore(store): publish ${tag}"
+          git push origin HEAD:sideload-beta
